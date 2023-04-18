@@ -48,5 +48,22 @@ services:
     ports:
       - 9998:80
 
+  traggo:
+    image: traggo/server:latest
+    container_name: traggo
+    environment:
+      TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
+      TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.traggo.rule: "Host(`traggo.local.host`)"
+      traefik.http.routers.traggo.entrypoints: "http"
+    volumes:
+      - ./traggodata:/opt/traggo/data
+    networks:
+      - traefik-net
+    ports:
+      - 9997:3030
+
 networks:
   traefik-net:

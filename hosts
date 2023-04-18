@@ -3,5 +3,6 @@
 127.0.0.1 traefik.local.host
 127.0.0.1 timetagger.local.host
 127.0.0.1 excalidraw.local.host
+127.0.0.1 traggo.local.host
 
 # END self-hosted services
