@@ -52,6 +52,7 @@ services:
     image: traggo/server:latest
     container_name: traggo
     environment:
+      TRAGGO_PORT: 80
       TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
       TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
     labels:
@@ -63,7 +64,7 @@ services:
     networks:
       - traefik-net
     ports:
-      - 9997:3030
+      - 9997:80
 
 networks:
   traefik-net:
