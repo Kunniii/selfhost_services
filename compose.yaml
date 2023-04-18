@@ -1,25 +1,29 @@
-version: "3.9"
+version: "3"
 services:
-  reverse-proxy:
+  traefik:
     image: traefik:latest
     container_name: "traefik"
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+    labels:
+      traefik.docker.network: "traefik-net"
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: "Host(`traefik.local.host`)"
+      traefik.http.routers.traefik.service: "api@internal"
+    networks:
+      - traefik-net
     ports:
-      - "80:80"
-      - "8080:8080"
+      - 80:80
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./traefik:/etc/traefik:ro
+
   timetagger:
     image: ghcr.io/almarklein/timetagger:latest
     container_name: "timetagger"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.timetagger.rule=Host(`timetagger.local.host`)"
-      - "traefik.http.routers.timetagger.entrypoints=web"
+      traefik.enable: "true"
+      traefik.http.routers.timetagger.rule: "Host(`timetagger.local.host`)"
+      traefik.http.routers.timetagger.entrypoints: "http"
     environment:
       - TIMETAGGER_BIND=0.0.0.0:80
       - TIMETAGGER_DATADIR=/root/_timetagger
@@ -27,15 +31,22 @@ services:
       - TIMETAGGER_CREDENTIALS=${TIMETAGGER_CREDENTIALS}
     volumes:
       - ./timetagger:/root/_timetagger/
+    networks:
+      - traefik-net
     ports:
-      - "9999:80"
+      - 9999:80
 
   excalidraw:
     image: excalidraw/excalidraw:latest
     container_name: excalidraw
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.excalidraw.rule=Host(`excalidraw.local.host`)"
-      - "traefik.http.routers.excalidraw.entrypoints=web"
+      traefik.enable: "true"
+      traefik.http.routers.excalidraw.rule: "Host(`excalidraw.local.host`)"
+      traefik.http.routers.excalidraw.entrypoints: "http"
+    networks:
+      - traefik-net
     ports:
-      - "9998:80"
+      - 9998:80
+
+networks:
+  traefik-net:
