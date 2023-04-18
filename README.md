@@ -44,7 +44,7 @@ Create a file at `/etc/systemd/system/` named `selfhost.service`
 
 Copy the content below. Remember to edit the `[FULL_PATH_TO_THIS_REPO]` and `[YOUR_USERNAME]` to match your system.
 
-```toml
+```yaml
 [Unit]
 Description=Self-hosted services
 
