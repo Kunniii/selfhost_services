@@ -1,4 +1,4 @@
-# Self hosted services
+# Self hosted services using Docker and Docker Compose
 
 ## What is this
 
