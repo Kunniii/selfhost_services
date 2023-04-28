@@ -16,5 +16,5 @@ providers:
     exposedByDefault: false
     network: "traefik-net"
   file:
-    filename: "/etc/traefik/config.yml"
+    filename: "/etc/traefik/config.yaml"
     watch: true
