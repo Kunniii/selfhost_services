@@ -20,6 +20,8 @@ services:
   timetagger:
     image: ghcr.io/almarklein/timetagger:latest
     container_name: "timetagger"
+    depends_on:
+      - traefik
     labels:
       traefik.enable: "true"
       traefik.http.routers.timetagger.rule: "Host(`timetagger.local.host`)"
@@ -39,6 +41,8 @@ services:
   excalidraw:
     image: excalidraw/excalidraw:latest
     container_name: excalidraw
+    depends_on:
+      - traefik
     labels:
       traefik.enable: "true"
       traefik.http.routers.excalidraw.rule: "Host(`excalidraw.local.host`)"
@@ -51,6 +55,8 @@ services:
   traggo:
     image: traggo/server:latest
     container_name: traggo
+    depends_on:
+      - traefik
     environment:
       TRAGGO_PORT: 80
       TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
@@ -65,6 +71,20 @@ services:
       - traefik-net
     ports:
       - 9997:80
+
+  draw-io:
+    image: jgraph/drawio:latest
+    container_name: draw-io
+    depends_on:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.drawio.rule: "Host(`drawio.local.host`)"
+      traefik.http.routers.drawio.entrypoints: "http"
+    networks:
+      - traefik-net
+    ports:
+      - 9996:8080
 
 networks:
   traefik-net:

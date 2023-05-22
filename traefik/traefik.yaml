@@ -15,6 +15,3 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
     network: "traefik-net"
-  file:
-    filename: "/etc/traefik/config.yaml"
-    watch: true
