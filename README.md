@@ -12,6 +12,12 @@ Everyone can clone and use it! Here is how to setup this Docker Compose repo.
 
 Follow these steps to set up the project:
 
+0. Create a docker Network
+
+    ```bash
+    docker network create traefik-net
+    ```
+
 1. Copy the `.env.sample` file provided in the repository to create a new `.env` file using the following command:
 
     ```bash
