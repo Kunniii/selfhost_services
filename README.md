@@ -43,34 +43,3 @@ Follow these steps to set up the project:
     ```bash
     docker compose up -d
     ```
-
-## Use this repo as a Service (on Linux)
-
-Create a file at `/etc/systemd/system/` named `selfhost.service`
-
-Copy the content below. Remember to edit the `[FULL_PATH_TO_THIS_REPO]` and `[YOUR_USERNAME]` to match your system.
-
-```yaml
-[Unit]
-Description=Self-hosted services
-
-[Service]
-User=[YOUR_USERNAME or `root`]
-WorkingDirectory=[FULL_PATH_TO_THIS_REPO]
-ExecStart=docker compose up -d
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Save the file. Then start the service.
-
-```sh
-sudo systemctl start selfhost.service # or start [filename].service
-```
-
-Enable the service so that everytime you login to the computer, the services is always running.
-
-```sh
-sudo systemctl enable selfhost.service # or enable [filename].service
-```
