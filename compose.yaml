@@ -91,6 +91,23 @@ services:
     ports:
       - 9996:8080
 
+  focalboard:
+    restart: always
+    image: mattermost/focalboard:latest
+    container_name: focalboard
+    depends_on:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.focalboard.rule: "Host(`focalboard.local.host`)"
+      traefik.http.routers.focalboard.entrypoints: "http"
+    volumes:
+      - ./focalboard:/opt/focalboard/data
+    networks:
+      - traefik-net
+    ports:
+      - 9995:8000
+
 networks:
   traefik-net:
     external: true
