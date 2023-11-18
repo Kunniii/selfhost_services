@@ -102,11 +102,14 @@ services:
       traefik.http.routers.focalboard.rule: "Host(`focalboard.local.host`)"
       traefik.http.routers.focalboard.entrypoints: "http"
     volumes:
-      - ./focalboard:/opt/focalboard/data
+      - focalboard:/opt/focalboard/data:rw
     networks:
       - traefik-net
     ports:
       - 9995:8000
+
+volumes:
+  focalboard:
 
 networks:
   traefik-net:
