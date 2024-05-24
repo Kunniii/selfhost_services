@@ -6,5 +6,6 @@
 127.0.0.1 traggo.local.host
 127.0.0.1 drawio.local.host
 127.0.0.1 focalboard.local.host
+127.0.0.1 portainer.local.host
 
 # END self-hosted services

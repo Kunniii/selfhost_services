@@ -1,4 +1,3 @@
-version: "3"
 services:
   traefik:
     restart: always
@@ -26,19 +25,19 @@ services:
       - traefik
     labels:
       traefik.enable: "true"
+      traefik.http.services.timetagger-service.loadbalancer.server.port: 80
+
       traefik.http.routers.timetagger.rule: "Host(`timetagger.local.host`)"
       traefik.http.routers.timetagger.entrypoints: "http"
     environment:
       TIMETAGGER_BIND: 0.0.0.0:80
       TIMETAGGER_DATADIR: /root/_timetagger
       TIMETAGGER_LOG_LEVEL: info
-      TIMETAGGER_CREDENTIALS: ${TIMETAGGER_CREDENTIALS}
+      TIMETAGGER_CREDENTIALS: ${TIMETAGGER_CREDENTIALS:?}
     volumes:
       - ./timetagger:/root/_timetagger/
     networks:
       - traefik-net
-    ports:
-      - 9999:80
 
   excalidraw:
     restart: always
@@ -48,12 +47,12 @@ services:
       - traefik
     labels:
       traefik.enable: "true"
+      traefik.http.services.excalidraw-service.loadbalancer.server.port: 80
+
       traefik.http.routers.excalidraw.rule: "Host(`excalidraw.local.host`)"
       traefik.http.routers.excalidraw.entrypoints: "http"
     networks:
       - traefik-net
-    ports:
-      - 9998:80
 
   traggo:
     restart: always
@@ -63,18 +62,17 @@ services:
       - traefik
     environment:
       TRAGGO_PORT: 80
-      TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
-      TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
+      TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME:?}
+      TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS:?}
     labels:
       traefik.enable: "true"
+      traefik.http.services.traggo-service.loadbalancer.server.port: 80
       traefik.http.routers.traggo.rule: "Host(`traggo.local.host`)"
       traefik.http.routers.traggo.entrypoints: "http"
     volumes:
       - ./traggodata:/opt/traggo/data
     networks:
       - traefik-net
-    ports:
-      - 9997:80
 
   draw-io:
     restart: always
@@ -84,12 +82,11 @@ services:
       - traefik
     labels:
       traefik.enable: "true"
+      traefik.http.services.draw-io-service.loadbalancer.server.port: 8080
       traefik.http.routers.drawio.rule: "Host(`drawio.local.host`)"
       traefik.http.routers.drawio.entrypoints: "http"
     networks:
       - traefik-net
-    ports:
-      - 9996:8080
 
   focalboard:
     restart: always
@@ -99,17 +96,48 @@ services:
       - traefik
     labels:
       traefik.enable: "true"
+      traefik.http.services.focalboard-service.loadbalancer.server.port: 8000
       traefik.http.routers.focalboard.rule: "Host(`focalboard.local.host`)"
       traefik.http.routers.focalboard.entrypoints: "http"
     volumes:
       - focalboard:/opt/focalboard/data:rw
     networks:
       - traefik-net
-    ports:
-      - 9995:8000
+
+  portainer:
+    restart: always
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    depends_on:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.portainer-service.loadbalancer.server.port: 9000
+      traefik.http.routers.portainer.rule: "Host(`portainer.local.host`)"
+      traefik.http.routers.portainer.entrypoints: "http"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - traefik-net
+
+  registry:
+    restart: always
+    image: registry
+    container_name: registry
+    depends_on:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.registry-service.loadbalancer.server.port: 5000
+      traefik.http.routers.registry.rule: "Host(`registry.local.host`)"
+      traefik.http.routers.registry.entrypoints: "http"
+    networks:
+      - traefik-net
 
 volumes:
   focalboard:
+  portainer_data:
 
 networks:
   traefik-net:
